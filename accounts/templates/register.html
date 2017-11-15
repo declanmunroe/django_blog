@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load bootstrap_tags %}
+{% block content %}
+<h1>Create account</h1>
+    
+    <form method = "POST">
+        {% csrf_token %}
+        
+        {{ form | as_bootstrap }} <!--as_p adds a p tag to each form element so each element appears on a new line-->
+        
+        <button type = "submit">Register</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load bootstrap_tags %}
+{% block content %}
+
+{% if request.user.is_authenticated %} <!--only show the line below when a user is logged in. When logged out the line will not display-->
+<p>You are logged in as {{ request.user.email }}</p>
+{% endif %}
+    
+{% endblock %}
