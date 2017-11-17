@@ -17,9 +17,15 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from accounts.views import get_index
 from accounts import urls as accounts_urls
+from blog import urls as blog_urls
+from blog.views import show_posts
+from .settings import MEDIA_ROOT
+from django.views import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', get_index),
+    url(r'^$', show_posts, name="home"), # making the show_posts page the index page so when the page the site is loaded it displays all the blogs
     url(r"^accounts/", include(accounts_urls)),
+    url(r"^blog/", include(blog_urls)),
+    url(r'^media/(?P<path>.*)$', static.serve,{'document_root': MEDIA_ROOT}),
 ]
