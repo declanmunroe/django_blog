@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
-from .forms import BlogPostForm
+from .models import Post, Comment
+from .forms import BlogPostForm, BlogCommentForm
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
@@ -11,8 +11,11 @@ def show_posts(request):
     return render(request, "blogposts.html", { 'posts': posts })
     
 def view_post(request, id):
-    post = get_object_or_404(Post, pk=id)
-    return render(request, "viewpost.html", { "post" : post })
+    this_post = get_object_or_404(Post, pk=id)
+    comments = Comment.objects.filter(post=this_post)
+    form = BlogCommentForm()
+
+    return render(request, "viewpost.html", {'post': this_post, 'comments': comments, "form" : form})
     
 def add_post(request):
     if request.method == "POST":
@@ -68,10 +71,21 @@ def edit_post(request, id):
             post.created_date = timezone.now()
             post.published_date = timezone.now()
             post.save()
-            return redirect(view_post, post.pk)
+            return redirect(view_post, id)
     else:
         form = BlogPostForm(instance=post)
     
     return render(request, "addform.html", { 'form': form })
+    
+def add_comment(request, id):
+    post = get_object_or_404(Post, pk=id)
+    form = BlogCommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.post = post
+        comment.save()
+        return redirect(view_post, id) # points to the function get_index above
+
 
 
