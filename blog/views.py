@@ -71,7 +71,7 @@ def edit_post(request, id):
             post.created_date = timezone.now()
             post.published_date = timezone.now()
             post.save()
-            return redirect(view_post, id)
+            return redirect(view_post, post.pk)
     else:
         form = BlogPostForm(instance=post)
     
@@ -85,7 +85,7 @@ def add_comment(request, id):
         comment.author = request.user
         comment.post = post
         comment.save()
-        return redirect(view_post, id) # points to the function get_index above
+        return redirect(view_post, post.pk) # points to the function get_index above
 
 
 
